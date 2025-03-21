@@ -2,6 +2,6 @@ services:
   - type: web
     name: adhd-timer
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python3 adhd_timer_web.py
-    pythonVersion: 3.10
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python adhd_timer_web.py
