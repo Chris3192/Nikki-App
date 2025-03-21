@@ -9,10 +9,10 @@ app = Flask(__name__)
 
 # Encouragement messages
 messages = [
-    "You're doing great! Keep going! 💪",
-    "Stay focused, you're making progress! 🚀",
-    "One step at a time. You've got this! 🎯",
-    "Breathe. You're in control. 🌿",
+    "You're doing great Ms! Keep going! 💪",
+    "Stay focused, you're making progress Puta! 🚀",
+    "One step at a time. You've got this Capi Cheeks! 🎯",
+    "Breathe. You're in control 🌿",
     "Your work matters. Keep pushing! 🔥"
 ]
 
@@ -23,16 +23,11 @@ timer_data = {
     "message": ""
 }
 
-# This event will be used to control the pause/resume functionality
-pause_event = threading.Event()
-pause_event.set()  # Initially allow the countdown to run
 
 def countdown():
     """Background thread for the timer countdown."""
     while timer_data["running"]:
-        if timer_data["time_left"] > 0:
-            # Check if the timer is paused, if so, wait until it is resumed
-            pause_event.wait()  # If the event is cleared, it will block here
+        if not timer_data["paused"] and timer_data["time_left"] > 0:
             time.sleep(1)
             timer_data["time_left"] -= 1
 
@@ -40,6 +35,7 @@ def countdown():
             timer_data["running"] = False
             timer_data["message"] = random.choice(messages)
             break
+
 
 @app.route("/")
 def index():
@@ -49,41 +45,59 @@ def index():
                            running=timer_data["running"],
                            paused=timer_data["paused"])
 
+
 @app.route("/start")
 def start_timer():
     if not timer_data["running"]:
         timer_data["running"] = True
         timer_data["paused"] = False
         timer_data["time_left"] = 25 * 60  # Reset timer
-        timer_data["message"] = ""
+        timer_data["message"] = "Timer started! Let's go Nikki! 🚀"  # Message when starting
         threading.Thread(target=countdown, daemon=True).start()
-    return "Timer started!"
+
+    # Re-render page after starting the timer
+    return render_template("index.html",
+                           time_left=timer_data["time_left"],
+                           message=timer_data["message"],
+                           running=timer_data["running"],
+                           paused=timer_data["paused"])
+
 
 @app.route("/pause")
 def pause_timer():
     if timer_data["running"]:
         timer_data["paused"] = not timer_data["paused"]
         if timer_data["paused"]:
-            pause_event.clear()  # Block the countdown
+            timer_data["message"] = "Timer paused. Don't be lazy Puta!! ☕"  # Message when paused
         else:
-            pause_event.set()  # Resume the countdown
-    return "Timer paused/resumed!"
+            timer_data["message"] = "Timer resumed. Let's keep moving Capi Cheeks! 💨"  # Message when resumed
+
+    # Re-render page after pausing or resuming the timer
+    return render_template("index.html",
+                           time_left=timer_data["time_left"],
+                           message=timer_data["message"],
+                           running=timer_data["running"],
+                           paused=timer_data["paused"])
+
 
 @app.route("/reset")
 def reset_timer():
     timer_data["running"] = False
     timer_data["paused"] = False
     timer_data["time_left"] = 25 * 60
-    timer_data["message"] = ""
-    pause_event.set()  # Make sure the countdown is not blocked
-    return "Timer reset!"
+    timer_data["message"] = "Timer reset! Lets have some Coca leafs! 🌿"
+
+    # Re-render page after resetting the timer
+    return render_template("index.html",
+                           time_left=timer_data["time_left"],
+                           message=timer_data["message"],
+                           running=timer_data["running"],
+                           paused=timer_data["paused"])
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))  # Default to 10000 if PORT is not set
     app.run(host='0.0.0.0', port=port)
-
-
-
 
 
 
