@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import threading
 import time
 import random
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -66,7 +67,7 @@ def reset_timer():
     return "Timer reset!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)  # This is how the app runs in production
+    serve(app, host='0.0.0.0', port=5000)
 
 
 
