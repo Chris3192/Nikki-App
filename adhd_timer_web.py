@@ -1,5 +1,4 @@
 import os
-from pyngrok import ngrok
 from flask import Flask, render_template
 import threading
 import time
