@@ -22,7 +22,6 @@ timer_data = {
     "message": ""
 }
 
-
 def countdown():
     """Background thread for the timer countdown."""
     while timer_data["running"]:
@@ -35,7 +34,6 @@ def countdown():
             timer_data["message"] = random.choice(messages)
             break
 
-
 @app.route("/")
 def index():
     return render_template("index.html",
@@ -44,40 +42,35 @@ def index():
                            running=timer_data["running"],
                            paused=timer_data["paused"])
 
-
 @app.route("/start")
 def start_timer():
     if not timer_data["running"]:
         timer_data["running"] = True
         timer_data["paused"] = False
-        timer_data["time_left"] = 25 * 60  # Reset timer
-        timer_data["message"] = "Timer started! Let's go Nikki! 🚀"  # Message when starting
+        timer_data["time_left"] = 25 * 60
+        timer_data["message"] = "Timer started! Let's go Nikki! 🚀"
         threading.Thread(target=countdown, daemon=True).start()
 
-    # Re-render page after starting the timer
     return render_template("index.html",
                            time_left=timer_data["time_left"],
                            message=timer_data["message"],
                            running=timer_data["running"],
                            paused=timer_data["paused"])
-
 
 @app.route("/pause")
 def pause_timer():
     if timer_data["running"]:
         timer_data["paused"] = not timer_data["paused"]
         if timer_data["paused"]:
-            timer_data["message"] = "Timer paused. Don't be lazy Puta!! ☕"  # Message when paused
+            timer_data["message"] = "Timer paused. Don't be lazy Puta!! ☕"
         else:
-            timer_data["message"] = "Timer resumed. Let's keep moving Capi Cheeks! 💨"  # Message when resumed
+            timer_data["message"] = "Timer resumed. Let's keep moving Capi Cheeks! 💨"
 
-    # Re-render page after pausing or resuming the timer
     return render_template("index.html",
                            time_left=timer_data["time_left"],
                            message=timer_data["message"],
                            running=timer_data["running"],
                            paused=timer_data["paused"])
-
 
 @app.route("/reset")
 def reset_timer():
@@ -86,14 +79,12 @@ def reset_timer():
     timer_data["time_left"] = 25 * 60
     timer_data["message"] = "Timer reset! Lets have some Coca leafs! 🌿"
 
-    # Re-render page after resetting the timer
     return render_template("index.html",
                            time_left=timer_data["time_left"],
                            message=timer_data["message"],
                            running=timer_data["running"],
                            paused=timer_data["paused"])
 
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Default to 10000 if PORT is not set
+    port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
