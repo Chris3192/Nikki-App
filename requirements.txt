@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 Flask==3.1.0
 Werkzeug==3.1.3
 waitress==3.0.2
+=======
+Flask==3.1.0
+Werkzeug==3.1.3
+waitress==3.0.2
+>>>>>>> d1b740c546afce52bdecf5e0b0ba101821b394ec
 PyYAML==6.0.2
