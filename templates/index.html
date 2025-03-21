@@ -3,40 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikki Focus Timer</title>
+    <title>🌿Nikki Timer</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; margin: 50px; }
-        .timer { font-size: 40px; margin: 20px; }
-        .message { font-size: 20px; color: green; margin-top: 10px; }
-        button { font-size: 20px; padding: 10px; margin: 10px; cursor: pointer; }
-    </style>
-    <script>
-        function updateTimer() {
-            fetch("/")
-                .then(response => response.text())
-                .then(html => {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                });
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
         }
-        setInterval(updateTimer, 1000);
-    </script>
+        .timer {
+            font-size: 50px;
+            margin: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #007BFF;
+        }
+    </style>
 </head>
 <body>
-    <h1>🔵Nikki Focus Timer</h1>
-    <div class="timer">{{ '%02d:%02d' % (time_left // 60, time_left % 60) }}</div>
-    
-    {% if not running %}
-        <button onclick="fetch('/start')">Start</button>
-    {% else %}
-        <button onclick="fetch('/pause')">
-            {% if paused %}Resume{% else %}Pause{% endif %}
-        </button>
-    {% endif %}
-    
-    <button onclick="fetch('/reset')">Reset</button>
+    <h1>🦇 Nikki Focus Timer 🐚</h1>
+    <div class="timer" id="timer">25:00</div>
+    <div>
+        <button class="btn" id="start" onclick="startTimer()">Start</button>
+        <button class="btn" id="pause" onclick="pauseTimer()">Pause</button>
+        <button class="btn" id="reset" onclick="resetTimer()">Reset</button>
+    </div>
+    <div class="message" id="message"></div>
 
-    <div class="message">{{ message }}</div>
+    <script>
+        let timerInterval;
+        let isPaused = false;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+
+        // Motivational messages
+        const messages = [
+            "You're doing great Ms! Keep going! 💪",
+            "Stay focused, you're making progress Puta! 🚀",
+            "One step at a time. You've got this Capi Cheeks! 🎯",
+            "Breathe. You're in control 🌿",
+            "Your work matters. Keep pushing! 🔥"
+        ];
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            if (seconds < 10) seconds = "0" + seconds;
+            document.getElementById("timer").textContent = minutes + ":" + seconds;
+        }
+
+        function startTimer() {
+            // Prevent multiple intervals from being created
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            if (isPaused) {
+                isPaused = false;
+                document.getElementById("message").textContent = "Timer resumed. Let's keep moving Jelly Bean! 🍄‍🐸";
+            } else {
+                timeLeft = 25 * 60; // Reset to 25 minutes when starting
+                document.getElementById("message").textContent = "Timer started! Prepare your Snacks 🥐!! Let's go Nikki!🚀";
+            }
+
+            document.getElementById("start").disabled = true;
+            document.getElementById("pause").disabled = false;
+            document.getElementById("reset").disabled = false;
+
+            timerInterval = setInterval(function() {
+                if (!isPaused && timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else if (timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("message").textContent = "Time's up! Take a break and Relax 🧘‍♀️";
+                    alert("Time's up! Take a break!");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isPaused = true;
+            document.getElementById("pause").disabled = true;
+            document.getElementById("start").disabled = false;
+            document.getElementById("message").textContent = "Timer paused. Don't be lazy Puta!! 😤";
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+            document.getElementById("pause").disabled = true;
+            document.getElementById("start").disabled = false;
+            document.getElementById("reset").disabled = true;
+            document.getElementById("message").textContent = "Timer reset! I hope it's the last time Ms! 😒";
+        }
+
+        updateTimerDisplay(); // Initialize the display
+    </script>
 </body>
 </html>
