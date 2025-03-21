@@ -1,16 +1,16 @@
+import os
+from pyngrok import ngrok
 from flask import Flask, render_template
 import threading
 import time
 import random
-from waitress import serve
-from adhd_timer_web import app
 
 app = Flask(__name__)
 
 # Encouragement messages
 messages = [
-    "You're doing great Ms! Keep going! 💪",
-    "Stay focused, you're making progress Puta! 🚀",
+    "You're doing great! Keep going! 💪",
+    "Stay focused, you're making progress! 🚀",
     "One step at a time. You've got this! 🎯",
     "Breathe. You're in control. 🌿",
     "Your work matters. Keep pushing! 🔥"
@@ -68,7 +68,9 @@ def reset_timer():
     return "Timer reset!"
 
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))  # Use the port from the environment
+    app.run(host="0.0.0.0", port=port)
+
 
 
 
