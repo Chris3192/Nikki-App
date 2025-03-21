@@ -3,6 +3,7 @@ import threading
 import time
 import random
 from waitress import serve
+from adhd_timer_web import app
 
 app = Flask(__name__)
 
