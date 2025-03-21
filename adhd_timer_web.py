@@ -23,10 +23,16 @@ timer_data = {
     "message": ""
 }
 
+# This event will be used to control the pause/resume functionality
+pause_event = threading.Event()
+pause_event.set()  # Initially allow the countdown to run
+
 def countdown():
     """Background thread for the timer countdown."""
     while timer_data["running"]:
-        if not timer_data["paused"] and timer_data["time_left"] > 0:
+        if timer_data["time_left"] > 0:
+            # Check if the timer is paused, if so, wait until it is resumed
+            pause_event.wait()  # If the event is cleared, it will block here
             time.sleep(1)
             timer_data["time_left"] -= 1
 
@@ -57,6 +63,10 @@ def start_timer():
 def pause_timer():
     if timer_data["running"]:
         timer_data["paused"] = not timer_data["paused"]
+        if timer_data["paused"]:
+            pause_event.clear()  # Block the countdown
+        else:
+            pause_event.set()  # Resume the countdown
     return "Timer paused/resumed!"
 
 @app.route("/reset")
@@ -65,11 +75,14 @@ def reset_timer():
     timer_data["paused"] = False
     timer_data["time_left"] = 25 * 60
     timer_data["message"] = ""
+    pause_event.set()  # Make sure the countdown is not blocked
     return "Timer reset!"
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use the port from the environment
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))  # Default to 10000 if PORT is not set
+    app.run(host='0.0.0.0', port=port)
+
+
 
 
 
