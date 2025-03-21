@@ -1,16 +1,14 @@
-from pyngrok import ngrok
 from flask import Flask, render_template
 import threading
 import time
 import random
 
-
 app = Flask(__name__)
 
 # Encouragement messages
 messages = [
-    "You're doing great! Keep going! 💪",
-    "Stay focused, you're making progress! 🚀",
+    "You're doing great Ms! Keep going! 💪",
+    "Stay focused, you're making progress Puta! 🚀",
     "One step at a time. You've got this! 🎯",
     "Breathe. You're in control. 🌿",
     "Your work matters. Keep pushing! 🔥"
@@ -68,8 +66,7 @@ def reset_timer():
     return "Timer reset!"
 
 if __name__ == "__main__":
-    public_url = ngrok.connect(5000).public_url
-    print(f"Your app is live at {public_url}")
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000)  # This is how the app runs in production
+
 
 
