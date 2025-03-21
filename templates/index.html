@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nikki Focus Timer</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; margin: 50px; }
+        .timer { font-size: 40px; margin: 20px; }
+        .message { font-size: 20px; color: green; margin-top: 10px; }
+        button { font-size: 20px; padding: 10px; margin: 10px; cursor: pointer; }
+    </style>
+    <script>
+        function updateTimer() {
+            fetch("/")
+                .then(response => response.text())
+                .then(html => {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                });
+        }
+        setInterval(updateTimer, 1000);
+    </script>
+</head>
+<body>
+    <h1>🔵Nikki Focus Timer</h1>
+    <div class="timer">{{ '%02d:%02d' % (time_left // 60, time_left % 60) }}</div>
+    
+    {% if not running %}
+        <button onclick="fetch('/start')">Start</button>
+    {% else %}
+        <button onclick="fetch('/pause')">
+            {% if paused %}Resume{% else %}Pause{% endif %}
+        </button>
+    {% endif %}
+    
+    <button onclick="fetch('/reset')">Reset</button>
+
+    <div class="message">{{ message }}</div>
+</body>
+</html>
