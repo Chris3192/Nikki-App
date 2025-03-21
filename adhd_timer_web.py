@@ -3,8 +3,7 @@ from flask import Flask, render_template
 import threading
 import time
 import random
-from waitress import serve
-from adhd_timer_web import app
+
 
 app = Flask(__name__)
 
@@ -69,6 +68,8 @@ def reset_timer():
     return "Timer reset!"
 
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=10000)
+    public_url = ngrok.connect(5000).public_url
+    print(f"Your app is live at {public_url}")
+    app.run(host="0.0.0.0", port=5000)
 
 
