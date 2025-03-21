@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: adhd-timer
-    env: python
-    plan: free
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: python adhd_timer_web.py
