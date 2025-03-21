@@ -1,2 +1,1 @@
-web: gunicorn -w 4 -b 0.0.0.0:$PORT adhd_timer_web:app
-
+web: python adhd_timer_web.py
